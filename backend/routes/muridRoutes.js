@@ -2,11 +2,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-
+const { protect } = require('../middleware/authMiddleware');
 const Materi = require('../models/Materi');
 const Ujian = require('../models/Ujian');
 const Nilai = require('../models/Nilai');
 const User = require('../models/User');
+const muridController = require('../controllers/muridController');
+
+// Endpoint materi murid berdasarkan kelas login
+router.get('/materi', protect, muridController.getMateriByKelas);
 
 // ✅ Tes koneksi routing (opsional untuk debugging)
 router.get('/', (req, res) => {

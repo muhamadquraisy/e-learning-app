@@ -38,12 +38,20 @@ export default function SidebarMurid() {
               <Link
                 to={menu.path}
                 key={index}
-                className={`flex items-center gap-3 px-4 py-2 rounded-md transition-colors ${
-                  active ? 'bg-white text-teal-700 font-semibold' : 'hover:bg-teal-700'
+                className={`flex items-center px-4 py-2 rounded-md transition-all duration-200 ${
+                  active
+                    ? 'bg-white text-teal-700 font-semibold'
+                    : 'text-white hover:bg-teal-700'
                 }`}
               >
                 <Icon size={20} />
-                {open && <span>{menu.name}</span>}
+                <span
+                  className={`ml-3 whitespace-nowrap transition-all duration-200 ${
+                    open ? 'opacity-100 scale-100' : 'opacity-0 scale-0 w-0 overflow-hidden'
+                  }`}
+                >
+                  {menu.name}
+                </span>
               </Link>
             );
           })}
