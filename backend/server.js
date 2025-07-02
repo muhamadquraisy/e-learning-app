@@ -39,6 +39,7 @@ const materiRoutes = require('./routes/materiRoutes');
 const ujianRoutes = require('./routes/ujianRoutes');
 const soalRoutes = require('./routes/soalRoutes');
 const muridRoutes = require('./routes/muridRoutes');
+const laporanRoutes = require('./routes/laporanRoutes');
 
 // ====== API ROUTING ======
 app.use('/api/auth', authRoutes);         // Login, register, JWT
@@ -49,6 +50,8 @@ app.use('/api/materi', materiRoutes);     // CRUD materi belajar
 app.use('/api/ujian', ujianRoutes);       // CRUD ujian
 app.use('/api/soal', soalRoutes);         // CRUD soal ujian
 app.use('/api/murid', muridRoutes);       // Dashboard murid & fitur murid lainnya
+app.use('/api/laporan', laporanRoutes);   // buat detail ujian murid
+
 
 // ====== ROOT TEST ENDPOINT ======
 app.get('/', (req, res) => {

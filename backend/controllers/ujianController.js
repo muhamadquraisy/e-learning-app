@@ -1,4 +1,6 @@
 const Ujian = require('../models/Ujian');
+const Soal = require("../models/Soal");
+const Nilai = require('../models/Nilai');
 
 // Tambah Ujian
 exports.buatUjian = async (req, res) => {
@@ -27,9 +29,17 @@ exports.getUjianGuru = async (req, res) => {
 exports.getUjianById = async (req, res) => {
   try {
     const ujian = await Ujian.findById(req.params.id);
-    res.json(ujian);
+    if (!ujian) return res.status(404).json({ error: "Ujian tidak ditemukan" });
+
+    const soals = await Soal.find({ ujian: req.params.id });
+
+    res.json({
+      ...ujian.toObject(),
+      soals
+    });
   } catch (err) {
-    res.status(404).json({ error: 'Ujian tidak ditemukan' });
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -44,3 +54,32 @@ exports.tambahSoal = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.submitUjian = async (req, res) => {
+  try {
+    const ujian = await Ujian.findById(req.params.id);
+    if (!ujian) return res.status(404).json({ error: 'Ujian tidak ditemukan' });
+
+    const { jawaban, ragu } = req.body;
+
+    let skor = 0;
+    ujian.soal.forEach((s, i) => {
+      if (jawaban[i] === s.jawaban) skor++;
+    });
+
+    const nilai = new Nilai({
+      murid: req.user.id,
+      ujian: req.params.id,
+      jawaban,
+      ragu,
+      score: skor,
+      total: ujian.soal.length,
+    });
+
+    await nilai.save();
+
+    res.status(200).json({ message: 'Jawaban berhasil disubmit', score: skor });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}

@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import api from '../services/api';
+import { toast } from 'react-toastify';
 
 const DetailUjianMurid = () => {
   const { id } = useParams();
@@ -11,34 +13,24 @@ const DetailUjianMurid = () => {
   const [timeLeft, setTimeLeft] = useState(null);
   const timerRef = useRef(null);
 
-  // Fetch soal ujian
   useEffect(() => {
-  const token = localStorage.getItem('token'); // sesuaikan kalau pakai context
+    if (id) loadUjian();
+  }, [id]);
 
-  fetch(`/api/ujian/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then(res => {
-      if (!res.ok) throw new Error('Gagal autentikasi');
-      return res.json();
-    })
-    .then(data => {
-      setSoal(data.soal);
-      setTimeLeft(data.durasi * 60);
-    })
-    .catch(err => {
+  const loadUjian = async () => {
+    try {
+      const res = await api.get(`/ujian/${id}`); // ✅ tanpa '/api'
+      const soalData = res.data.soals || [];
+      setSoal(soalData);
+      setTimeLeft(res.data.durasi ? res.data.durasi * 60 : 900);
+    } catch (err) {
       console.error(err);
-      navigate('/login'); // redirect kalau unauthorized
-    });
-}, [id]);
+      toast.error("Gagal memuat ujian");
+    }
+  };
 
-
-  // Timer Countdown
   useEffect(() => {
     if (timeLeft === null) return;
-
     timerRef.current = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -49,18 +41,12 @@ const DetailUjianMurid = () => {
         return prev - 1;
       });
     }, 1000);
-
     return () => clearInterval(timerRef.current);
   }, [timeLeft]);
 
-  // Deteksi tab switching
   useEffect(() => {
     const handleBlur = () => {
-      fetch(`/api/laporan/tab-out`, {
-        method: 'POST',
-        body: JSON.stringify({ ujianId: id, waktu: new Date() }),
-        headers: { 'Content-Type': 'application/json' },
-      });
+      api.post('/laporan/tab-out', { ujianId: id, waktu: new Date() });
     };
     window.addEventListener('blur', handleBlur);
     return () => window.removeEventListener('blur', handleBlur);
@@ -71,13 +57,9 @@ const DetailUjianMurid = () => {
   };
 
   const handleSubmit = () => {
-    fetch(`/api/ujian/${id}/submit`, {
-      method: 'POST',
-      body: JSON.stringify({ jawaban, ragu }),
-      headers: { 'Content-Type': 'application/json' },
-    }).then(() => {
-      navigate('/murid/ujian');
-    });
+    api.post(`/ujian/${id}/submit`, { jawaban, ragu })
+      .then(() => navigate('/murid/ujian'))
+      .catch(err => toast.error("Gagal mengirim jawaban"));
   };
 
   const formatTime = (seconds) => {
@@ -99,7 +81,7 @@ const DetailUjianMurid = () => {
         <div>
           <p className="text-gray-800 mb-4">{currentSoal.pertanyaan}</p>
           <ul className="space-y-2">
-            {currentSoal.pilihan.map((opt, i) => (
+            {(currentSoal.opsi || currentSoal.pilihan || []).map((opt, i) => (
               <li key={i}>
                 <label className="flex items-center space-x-2">
                   <input
@@ -117,7 +99,7 @@ const DetailUjianMurid = () => {
 
           <div className="flex justify-between items-center mt-6">
             <button
-              onClick={() => setCurrent((prev) => Math.max(prev - 1, 0))}
+              onClick={() => setCurrent(prev => Math.max(prev - 1, 0))}
               disabled={current === 0}
               className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
             >
