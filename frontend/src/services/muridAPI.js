@@ -22,3 +22,11 @@ export const fetchMateriMurid = async () => {
   const res = await api.get("/murid/materi", authHeader());
   return res.data;
 };
+
+export const fetchMuridUjian = async () => {
+  const token = localStorage.getItem('token');
+  const res = await api.get('/murid/ujian', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};

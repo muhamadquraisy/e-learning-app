@@ -12,6 +12,24 @@ const muridController = require('../controllers/muridController');
 // Endpoint materi murid berdasarkan kelas login
 router.get('/materi', protect, muridController.getMateriByKelas);
 
+// ✅ Endpoint: GET /api/murid/ujian
+router.get('/ujian', protect, async (req, res) => {
+  try {
+    const murid = req.user;
+
+    if (murid.role !== 'murid') {
+      return res.status(403).json({ message: 'Akses ditolak. Hanya untuk murid.' });
+    }
+
+    const ujianList = await Ujian.find({ kelas: murid.kelas }).sort({ tanggal: 1 });
+
+    res.json(ujianList);
+  } catch (error) {
+    console.error('❌ Gagal ambil ujian:', error);
+    res.status(500).json({ message: 'Gagal mengambil daftar ujian' });
+  }
+});
+
 // ✅ Tes koneksi routing (opsional untuk debugging)
 router.get('/', (req, res) => {
   res.send('✅ Endpoint murid aktif');

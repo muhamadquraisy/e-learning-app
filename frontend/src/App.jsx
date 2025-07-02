@@ -18,6 +18,8 @@ import DetailUjian from "./pages/DetailUjian";
 // ====== Murid Pages ======
 import DashboardMurid from "./pages/DashboardMurid";
 import MateriMurid from './pages/MateriMurid';
+import UjianMurid from './pages/UjianMurid';
+import DetailUjianMurid from './pages/DetailUjianMurid';
 
 // ====== Layouts & Guards ======
 import ProtectedRoute from "./routes/ProtectedRoutes";
@@ -58,6 +60,8 @@ function App() {
             <Route index element={<DashboardMurid />} />
             <Route path="dashboard" element={<DashboardMurid />} />
             <Route path="materi" element={<MateriMurid />} />
+            <Route path="/murid/ujian" element={<UjianMurid />} />
+            <Route path="/murid/ujian/:id" element={<DetailUjianMurid />} />
             {/* Tambahkan rute murid lainnya di sini */}
           </Route>
         </Route>
