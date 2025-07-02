@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Variables (optional) */
+:root {
+  --primary-color: #007C91;
+  --accent-color: #008B8B;
+  --background-light: #E0F7F7;
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reset defaults */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-light);
+  color: #1f2937; /* Tailwind's gray-800 */
+}
+
+/* Make sure the body doesn't force layout */
+body {
+  display: block;
+}
+
+/* Anchor styling */
+a {
+  font-weight: 500;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+a:hover {
+  color: #005f6a;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Button reset */
+button {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Customize buttons if needed (Tailwind preferred) */
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--accent-color);
+}
+
+/* Light/dark toggle if needed later */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #ffffff;
+    background-color: #121212;
+  }
+}
