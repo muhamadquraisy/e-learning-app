@@ -43,7 +43,7 @@ const muridRoutes = require('./routes/muridRoutes');
 // ====== API ROUTING ======
 app.use('/api/auth', authRoutes);         // Login, register, JWT
 app.use('/api/users', userRoutes);        // CRUD user (admin)
-app.use('/api/statistik', statistikRoutes); // Dashboard statistik (admin/guru)
+app.use('/api/statistik', statistikRoutes); // Dashboard statistik (baru admin)
 app.use('/api/settings', settingsRoutes); // Pengaturan aplikasi
 app.use('/api/materi', materiRoutes);     // CRUD materi belajar
 app.use('/api/ujian', ujianRoutes);       // CRUD ujian

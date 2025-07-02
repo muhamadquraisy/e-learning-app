@@ -22,7 +22,7 @@ export default function SidebarMurid() {
   };
 
   return (
-    <div className={`bg-teal-600 text-white ${open ? 'w-64' : 'w-16'} h-screen fixed flex flex-col justify-between transition-all duration-300`}>
+    <div className={`bg-teal-600 text-white ${open ? 'w-64' : 'w-16'} h-screen fixed lg:static z-50 transition-all duration-300`}>
       <div>
         <div className="flex items-center justify-between p-4">
           {open && <h1 className="text-xl font-bold">Murid</h1>}

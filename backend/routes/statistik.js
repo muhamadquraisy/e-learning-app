@@ -5,6 +5,7 @@ const User = require('../models/User');
 const Materi = require('../models/Materi');
 const Ujian = require('../models/Ujian');
 const Nilai = require('../models/Nilai');
+const statistikController = require("../controllers/statistikController");
 
 // Statistik Umum - untuk admin
 router.get('/', protect, async (req, res) => {
@@ -19,6 +20,10 @@ router.get('/', protect, async (req, res) => {
     res.status(500).json({ error: 'Gagal ambil data statistik' });
   }
 });
+
+// ➕ Tambahkan route murid dashboard
+console.log("📊 Statistik routes loaded");
+router.get("/murid-dashboard", protect, statistikController.getDashboardMurid);
 
 // Statistik Murid - untuk dashboard murid
 router.get('/murid/:id', protect, async (req, res) => {

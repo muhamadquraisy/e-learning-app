@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchStatistikMurid } from '../services/muridAPI';
-import { Loader2 } from 'lucide-react';
+import { fetchMuridDashboard } from "../services/muridAPI";
 
 const DashboardMurid = () => {
   const [stat, setStat] = useState(null);
@@ -17,21 +16,19 @@ const DashboardMurid = () => {
       return;
     }
 
-    fetchStatistikMurid(userId)
-      .then(res => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Respon statistik:', res.data);
-        }
+    fetchMuridDashboard()
+        .then(data => {
+      console.log('Respon statistik:', data);
 
-        if (res.data && typeof res.data === 'object') {
-          setStat(res.data);
-        } else {
-          console.warn('Format data tidak sesuai:', res.data);
-        }
-      })
-      .catch(err => {
-        console.error('Gagal ambil statistik murid:', err);
-      });
+      if (data && typeof data === 'object') {
+        setStat(data);
+      } else {
+        console.warn('Format data tidak sesuai:', data);
+      }
+    })
+    .catch(err => {
+      console.error('Gagal ambil statistik murid:', err);
+    });
   }, [userId, navigate]);
 
   // Skeleton saat loading
@@ -46,7 +43,7 @@ const DashboardMurid = () => {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:px-8 lg:ml-64">
+    <div className={`p-4 sm:p-6 lg:px-8 transition-all duration-300 ${stat.sidebarOpen ? 'ml-64' : 'ml-16'} ml-0`}>
       <Header nama={nama} />
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-6">
